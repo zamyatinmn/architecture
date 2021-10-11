@@ -6,30 +6,31 @@ import android.os.PersistableBundle
 import vboyko.gb.libs.lesson1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private var vb: ActivityMainBinding? = null
 
-    val counters = mutableListOf(0, 0, 0)
+    private lateinit var mainBinding: ActivityMainBinding
+
+    private val counters = mutableListOf(0, 0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vb = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(vb?.root)
-        vb?.btnCounter1?.setOnClickListener {
-            vb?.btnCounter1?.text = (++counters[0]).toString()
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mainBinding.root)
+        mainBinding.btnCounter1.setOnClickListener {
+            mainBinding.btnCounter1.text = (++counters[0]).toString()
         }
-        vb?.btnCounter2?.setOnClickListener {
-            vb?.btnCounter2?.text = (++counters[1]).toString()
+        mainBinding.btnCounter2.setOnClickListener {
+            mainBinding.btnCounter2.text = (++counters[1]).toString()
         }
-        vb?.btnCounter3?.setOnClickListener {
-            vb?.btnCounter3?.text = (++counters[2]).toString()
+        mainBinding.btnCounter3.setOnClickListener {
+            mainBinding.btnCounter3.text = (++counters[2]).toString()
         }
         initViews()
     }
 
-    fun initViews() {
-        vb?.btnCounter1?.text = counters[0].toString()
-        vb?.btnCounter2?.text = counters[1].toString()
-        vb?.btnCounter3?.text = counters[2].toString()
+    private fun initViews() {
+        mainBinding.btnCounter1.text = counters[0].toString()
+        mainBinding.btnCounter2.text = counters[1].toString()
+        mainBinding.btnCounter3.text = counters[2].toString()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
