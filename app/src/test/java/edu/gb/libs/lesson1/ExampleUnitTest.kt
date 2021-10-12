@@ -1,4 +1,4 @@
-package vboyko.gb.libs.lesson1
+package edu.gb.libs.lesson1
 
 import org.junit.Test
 

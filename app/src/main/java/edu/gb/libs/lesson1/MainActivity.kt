@@ -1,9 +1,9 @@
-package vboyko.gb.libs.lesson1
+package edu.gb.libs.lesson1
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import vboyko.gb.libs.lesson1.databinding.ActivityMainBinding
+import edu.gb.libs.lesson1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), MainView {
 

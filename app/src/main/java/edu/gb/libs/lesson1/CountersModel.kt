@@ -1,4 +1,4 @@
-package vboyko.gb.libs.lesson1
+package edu.gb.libs.lesson1
 
 class CountersModel {
     private val counters = mutableListOf(0, 0, 0)
