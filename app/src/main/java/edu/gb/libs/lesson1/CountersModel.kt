@@ -16,3 +16,9 @@ class CountersModel {
         counters[index] = value
     }
 }
+
+enum class Counter {
+    FIRST,
+    SECOND,
+    THIRD
+}
