@@ -1,34 +1,42 @@
 package vboyko.gb.libs.lesson1
 
 import android.os.Bundle
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import com.github.terrakok.cicerone.androidx.AppNavigator
+import moxy.MvpAppCompatActivity
+import moxy.ktx.moxyPresenter
 import vboyko.gb.libs.lesson1.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), MainView {
+class MainActivity : MvpAppCompatActivity(), MainView {
 
-    private lateinit var mainBinding: ActivityMainBinding
+    val navigator = AppNavigator(this, R.id.container)
 
-    private val presenter = MainPresenter(this)
+    private val presenter by moxyPresenter { MainPresenter(App.instance.router, AndroidScreens()) }
+
+    private var vb: ActivityMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainBinding.root)
-        val listener = View.OnClickListener {
-            presenter.counterClick(it.id)
-        }
-        mainBinding.btnCounter1.setOnClickListener(listener)
-        mainBinding.btnCounter2.setOnClickListener(listener)
-        mainBinding.btnCounter3.setOnClickListener(listener)
+        vb = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(vb?.root)
     }
 
-    //Подсказка к ПЗ: поделить на 3 отдельные функции и избавиться от index
-    override fun setButtonText(index: Int, text: String) {
-        when (index) {
-            0 -> mainBinding.btnCounter1.text = text
-            1 -> mainBinding.btnCounter2.text = text
-            2 -> mainBinding.btnCounter3.text = text
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        App.instance.navigatorHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        App.instance.navigatorHolder.removeNavigator()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        supportFragmentManager.fragments.forEach {
+            if (it is BackButtonListener && it.backPressed()) {
+                return
+            }
         }
+        presenter.backClicked()
     }
 }
