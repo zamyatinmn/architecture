@@ -33,7 +33,6 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
     }
 
     fun backPressed(): Boolean{
-//        router.exit()
         return true
     }
 }
