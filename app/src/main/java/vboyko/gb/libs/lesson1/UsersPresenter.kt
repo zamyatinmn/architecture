@@ -1,5 +1,6 @@
 package vboyko.gb.libs.lesson1
 
+import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 
@@ -26,10 +27,15 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val scr
         }
     }
 
-    fun loadData() {
+    private fun loadData() {
         val users = usersRepo.getUsers()
-        usersListPresenter.users.addAll(users)
-        viewState.updateList()
+        users.subscribe({
+            usersListPresenter.users.add(it)
+        }, {
+            Log.e(this.javaClass.name, "Error repo get users", it)
+        }, {
+            viewState.updateList()
+        })
     }
 
     fun backPressed(): Boolean{
