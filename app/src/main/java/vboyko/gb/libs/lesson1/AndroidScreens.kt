@@ -7,4 +7,7 @@ class AndroidScreens : IScreens {
     override fun users(): Screen {
         return FragmentScreen { UsersFragment.newInstance() }
     }
+    override fun currentUser(user: GithubUser): Screen {
+        return FragmentScreen { CurrentUserFragment.newInstance(user) }
+    }
 }

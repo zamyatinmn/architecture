@@ -13,3 +13,6 @@ interface UsersView: MvpView {
     fun updateList()
 }
 
+@StateStrategyType(AddToEndSingleStrategy::class)
+interface CurrentUserView: MvpView
+

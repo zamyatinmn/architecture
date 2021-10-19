@@ -3,7 +3,7 @@ package vboyko.gb.libs.lesson1
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPresenter<UsersView>() {
+class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router, val screens: AndroidScreens) : MvpPresenter<UsersView>() {
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
 
@@ -22,7 +22,7 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
         viewState.init()
         loadData()
         usersListPresenter.itemClickListener = { itemView ->
-//TODO: переход на экран пользователя
+            router.navigateTo(screens.currentUser(usersListPresenter.users.get(itemView.pos)), false)
         }
     }
 
@@ -33,7 +33,6 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
     }
 
     fun backPressed(): Boolean{
-        router.exit()
         return true
     }
 }
