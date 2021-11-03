@@ -3,6 +3,7 @@ package vboyko.gb.libs.lesson1
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import vboyko.gb.libs.lesson1.databinding.ItemUserBinding
 
 class UsersRVAdapter(val presenter: IUserListPresenter) :
@@ -31,6 +32,14 @@ class UsersRVAdapter(val presenter: IUserListPresenter) :
 
         override fun setLogin(text: String) = with(vb) {
             tvLogin.text = text
+        }
+
+        override fun setAvatar(url: String): Unit = with(vb) {
+            Glide.with(ivAvatar)
+                .load(url)
+                .centerInside()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(ivAvatar)
         }
 
     }
