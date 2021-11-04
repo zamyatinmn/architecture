@@ -30,9 +30,8 @@ class UsersPresenter(
         viewState.init()
         loadData()
         usersListPresenter.itemClickListener = { itemView ->
-            router.navigateTo(
+            router.replaceScreen(
                 screens.currentUser(usersListPresenter.users.get(itemView.pos)),
-                false
             )
         }
     }
@@ -47,6 +46,8 @@ class UsersPresenter(
             }, {
                 Log.e(this.javaClass.name, "Error repo get users", it)
             })
+
+
     }
 
     fun backPressed(): Boolean {

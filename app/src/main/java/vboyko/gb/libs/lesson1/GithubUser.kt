@@ -24,3 +24,9 @@ data class GithubUser(
     val type: String,
     val site_admin: Boolean
 ) : Parcelable
+
+data class Repo(
+    val id: Long,
+    val name: String,
+    val forks_count: Int
+)
