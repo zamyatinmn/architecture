@@ -14,5 +14,7 @@ interface UsersView: MvpView {
 }
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface CurrentUserView: MvpView
+interface CurrentUserView: MvpView {
+    fun createRepoView(repo: Repo)
+}
 

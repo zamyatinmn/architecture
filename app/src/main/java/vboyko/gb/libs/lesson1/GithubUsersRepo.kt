@@ -1,12 +1,20 @@
 package vboyko.gb.libs.lesson1
 
-import io.reactivex.rxjava3.core.Observable
+import com.google.gson.Gson
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 class GithubUsersRepo {
-    private val repositories =
-        (0..100).map { GithubUser("login $it") }
 
-    fun getUsers(): Observable<GithubUser> {
-        return Observable.fromIterable(repositories)
-    }
+    private val api = Retrofit.Builder()
+        .baseUrl("https://api.github.com/")
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(Gson()))
+        .build()
+        .create(GitHubApi::class.java)
+
+    fun getUsers() = api.getUsers()
+
+    fun getRepos(url: String) = api.getRepos(url)
 }
