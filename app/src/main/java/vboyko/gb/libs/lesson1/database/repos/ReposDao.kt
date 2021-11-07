@@ -8,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface ReposDao {
     @Query("SELECT * FROM repos WHERE owner LIKE :ownerId")
-    fun getAll(ownerId: Long)
+    fun getAll(ownerId: Long): List<Repos>
 
     @Insert
     fun insertAll(vararg repo: Repos)

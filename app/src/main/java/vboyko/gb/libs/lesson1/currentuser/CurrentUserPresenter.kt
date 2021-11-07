@@ -1,13 +1,14 @@
 package vboyko.gb.libs.lesson1.currentuser
 
+import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
 import vboyko.gb.libs.lesson1.AndroidScreens
 import vboyko.gb.libs.lesson1.CurrentUserView
 import vboyko.gb.libs.lesson1.GithubUser
 import vboyko.gb.libs.lesson1.GithubUsersRepo
+import vboyko.gb.libs.lesson1.users.UsersPresenter
 
 
 /**
@@ -16,9 +17,9 @@ import vboyko.gb.libs.lesson1.GithubUsersRepo
 
 
 class CurrentUserPresenter(
-    val usersRepo: GithubUsersRepo,
-    val router: Router,
-    val screens: AndroidScreens
+    private val usersRepo: GithubUsersRepo,
+    private val router: Router,
+    private val screens: AndroidScreens
 ) : MvpPresenter<CurrentUserView>() {
 
     fun backPressed(): Boolean {
@@ -26,13 +27,20 @@ class CurrentUserPresenter(
         return true
     }
 
-    fun loadRepos(user: GithubUser) =
-        usersRepo.getRepos(user.repos_url)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { repos ->
-                repos.forEach { repo ->
-                    viewState.createRepoView(repo)
-                }
+    private val disposable = usersRepo.subscribeOnGithubReposData()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({
+            it.forEach { repo ->
+                viewState.createRepoView(repo)
             }
+        }, {
+            Log.e(UsersPresenter.TAG, it.message, it)
+        })
+
+    fun loadRepos(user: GithubUser) = usersRepo.getRepos(user)
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
+    }
 }

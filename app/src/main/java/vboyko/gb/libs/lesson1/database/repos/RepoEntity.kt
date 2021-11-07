@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Repos(
     @PrimaryKey
     val id: Long,
-    val owner: Long = 0,
+    val owner: Long,
     val name: String,
     val forks_count: Int
 )

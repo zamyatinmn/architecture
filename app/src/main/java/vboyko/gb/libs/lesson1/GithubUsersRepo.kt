@@ -18,10 +18,10 @@ class GithubUsersRepo(private val cache: Cache) {
         .build()
         .create(GitHubApi::class.java)
 
-    private val bs = BehaviorSubject.create<Unit>()
+    private val userBs = BehaviorSubject.create<Unit>()
 
     fun subscribeOnGithubUsersData(): Observable<List<GithubUser>> {
-        return bs
+        return userBs
             .observeOn(Schedulers.io())
             .switchMap {
                 Observable.combineLatest(
@@ -39,7 +39,28 @@ class GithubUsersRepo(private val cache: Cache) {
             }
     }
 
-    fun getUsers() = bs.onNext(Unit)
+    fun getUsers() = userBs.onNext(Unit)
 
-    fun getRepos(url: String) = api.getRepos(url)
+    private val repoBs = BehaviorSubject.create<GithubUser>()
+
+    fun subscribeOnGithubReposData(): Observable<List<Repo>> {
+        return repoBs
+            .observeOn(Schedulers.io())
+            .switchMap {
+                Observable.combineLatest(
+                    Observable.just(cache.reposCache.getReposList(it.id)),
+                    api.getRepos(it.repos_url).onErrorReturn { emptyList() }.toObservable(),
+                    { fromDatabase, fromNetwork ->
+                        if (fromNetwork.isEmpty()) {
+                            fromDatabase
+                        } else {
+                            cache.reposCache.storeNewList(fromNetwork, it.id)
+                            fromNetwork
+                        }
+                    }
+                )
+            }
+    }
+
+    fun getRepos(user: GithubUser) = repoBs.onNext(user)
 }
