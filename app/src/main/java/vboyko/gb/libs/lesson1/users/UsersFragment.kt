@@ -1,8 +1,9 @@
-package vboyko.gb.libs.lesson1
+package vboyko.gb.libs.lesson1.users
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.LinearLayoutManager
 import moxy.ktx.moxyPresenter
+import vboyko.gb.libs.lesson1.*
 import vboyko.gb.libs.lesson1.databinding.FragmentUsersBinding
 
 class UsersFragment : ViewBindingFragment<FragmentUsersBinding>(FragmentUsersBinding::inflate),
@@ -12,8 +13,8 @@ class UsersFragment : ViewBindingFragment<FragmentUsersBinding>(FragmentUsersBin
         fun newInstance() = UsersFragment()
     }
 
-    val presenter: UsersPresenter by moxyPresenter {
-        UsersPresenter(GithubUsersRepo(), App.instance.router, AndroidScreens())
+    private val presenter: UsersPresenter by moxyPresenter {
+        UsersPresenter(GithubUsersRepo(App.instance.cache), App.instance.router, AndroidScreens())
     }
     var adapter: UsersRVAdapter? = null
 

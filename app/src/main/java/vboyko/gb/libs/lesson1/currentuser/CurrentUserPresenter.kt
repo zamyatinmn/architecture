@@ -1,14 +1,13 @@
-package vboyko.gb.libs.lesson1
+package vboyko.gb.libs.lesson1.currentuser
 
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.StyleSpan
-import android.widget.TextView
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
+import vboyko.gb.libs.lesson1.AndroidScreens
+import vboyko.gb.libs.lesson1.CurrentUserView
+import vboyko.gb.libs.lesson1.GithubUser
+import vboyko.gb.libs.lesson1.GithubUsersRepo
 
 
 /**
@@ -28,7 +27,7 @@ class CurrentUserPresenter(
     }
 
     fun loadRepos(user: GithubUser) =
-        GithubUsersRepo().getRepos(user.repos_url)
+        usersRepo.getRepos(user.repos_url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { repos ->

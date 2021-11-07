@@ -1,15 +1,15 @@
-package vboyko.gb.libs.lesson1
+package vboyko.gb.libs.lesson1.users
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
+import vboyko.gb.libs.lesson1.*
 
 class UsersPresenter(
-    val usersRepo: GithubUsersRepo,
-    val router: Router,
-    val screens: AndroidScreens
+    private val usersRepo: GithubUsersRepo,
+    private val router: Router,
+    private val screens: AndroidScreens
 ) : MvpPresenter<UsersView>() {
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -23,34 +23,39 @@ class UsersPresenter(
         }
     }
 
+    companion object {
+        const val TAG = "UsersPresenter"
+    }
+
     val usersListPresenter = UsersListPresenter()
+
+    private val disposable = usersRepo.subscribeOnGithubUsersData()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe({
+            usersListPresenter.users.clear()
+            usersListPresenter.users.addAll(it)
+            viewState.updateList()
+        }, {
+            Log.e(TAG, it.message, it)
+        })
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        loadData()
+        usersRepo.getUsers()
         usersListPresenter.itemClickListener = { itemView ->
             router.replaceScreen(
-                screens.currentUser(usersListPresenter.users.get(itemView.pos)),
+                screens.currentUser(usersListPresenter.users[itemView.pos]),
             )
         }
     }
 
-    private fun loadData() {
-        usersRepo.getUsers()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                usersListPresenter.users.addAll(it)
-                viewState.updateList()
-            }, {
-                Log.e(this.javaClass.name, "Error repo get users", it)
-            })
-
-
-    }
-
     fun backPressed(): Boolean {
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }
