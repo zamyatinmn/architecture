@@ -1,9 +1,12 @@
-package vboyko.gb.libs.lesson1
+package vboyko.gb.libs.lesson1.users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import vboyko.gb.libs.lesson1.IUserListPresenter
+import vboyko.gb.libs.lesson1.R
+import vboyko.gb.libs.lesson1.UserItemView
 import vboyko.gb.libs.lesson1.databinding.ItemUserBinding
 
 class UsersRVAdapter(val presenter: IUserListPresenter) :

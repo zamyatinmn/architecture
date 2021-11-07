@@ -1,4 +1,4 @@
-package vboyko.gb.libs.lesson1
+package vboyko.gb.libs.lesson1.currentuser
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import vboyko.gb.libs.lesson1.*
 import vboyko.gb.libs.lesson1.databinding.FragmentCurrentUserBinding
 
 class CurrentUserFragment :
@@ -29,7 +30,7 @@ class CurrentUserFragment :
     }
 
     private val presenter: CurrentUserPresenter by moxyPresenter {
-        CurrentUserPresenter(GithubUsersRepo(), App.instance.router, AndroidScreens())
+        CurrentUserPresenter(GithubUsersRepo(App.instance.cache), App.instance.router, AndroidScreens())
     }
 
     override fun backPressed() = presenter.backPressed()
