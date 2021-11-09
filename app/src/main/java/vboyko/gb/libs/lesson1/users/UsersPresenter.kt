@@ -3,14 +3,22 @@ package vboyko.gb.libs.lesson1.users
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 import vboyko.gb.libs.lesson1.*
+import javax.inject.Inject
 
-class UsersPresenter(
-    private val usersRepo: GithubUsersRepo,
-    private val router: Router,
-    private val screens: AndroidScreens
-) : MvpPresenter<UsersView>() {
+class UsersPresenter : MvpPresenter<UsersView>() {
+
+    @Inject
+    lateinit var usersRepo: GithubUsersRepo
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var screens: IScreens
+
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
 
@@ -29,18 +37,19 @@ class UsersPresenter(
 
     val usersListPresenter = UsersListPresenter()
 
-    private val disposable = usersRepo.subscribeOnGithubUsersData()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe({
-            usersListPresenter.users.clear()
-            usersListPresenter.users.addAll(it)
-            viewState.updateList()
-        }, {
-            Log.e(TAG, it.message, it)
-        })
+    lateinit var disposable: Disposable
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        disposable = usersRepo.subscribeOnGithubUsersData()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                usersListPresenter.users.clear()
+                usersListPresenter.users.addAll(it)
+                viewState.updateList()
+            }, {
+                Log.e(TAG, it.message, it)
+            })
         viewState.init()
         usersRepo.getUsers()
         usersListPresenter.itemClickListener = { itemView ->
