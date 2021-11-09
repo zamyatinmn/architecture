@@ -4,8 +4,9 @@ import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import vboyko.gb.libs.lesson1.currentuser.CurrentUserFragment
 import vboyko.gb.libs.lesson1.users.UsersFragment
+import javax.inject.Inject
 
-class AndroidScreens : IScreens {
+class AndroidScreens @Inject constructor() : IScreens {
     override fun users(): Screen {
         return FragmentScreen { UsersFragment.newInstance() }
     }

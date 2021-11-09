@@ -1,22 +1,11 @@
 package vboyko.gb.libs.lesson1
 
-import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import vboyko.gb.libs.lesson1.database.Cache
 
-class GithubUsersRepo(private val cache: Cache) {
-
-    private val api = Retrofit.Builder()
-        .baseUrl("https://api.github.com/")
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-        .addConverterFactory(GsonConverterFactory.create(Gson()))
-        .build()
-        .create(GitHubApi::class.java)
+class GithubUsersRepo(private val cache: Cache, private val api: GitHubApi) {
 
     private val userBs = BehaviorSubject.create<Unit>()
 

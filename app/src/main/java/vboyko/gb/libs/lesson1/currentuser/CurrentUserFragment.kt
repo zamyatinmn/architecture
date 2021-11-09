@@ -25,12 +25,15 @@ class CurrentUserFragment :
             bundle.putParcelable(LOGIN_KEY, user)
             return CurrentUserFragment().apply {
                 arguments = bundle
+                App.instance.appComponent.inject(this)
             }
         }
     }
 
     private val presenter: CurrentUserPresenter by moxyPresenter {
-        CurrentUserPresenter(GithubUsersRepo(App.instance.cache), App.instance.router, AndroidScreens())
+        CurrentUserPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun backPressed() = presenter.backPressed()
